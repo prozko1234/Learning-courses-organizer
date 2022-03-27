@@ -13,6 +13,10 @@ body {
   border-radius: .28571429rem;
 }
 
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
 /*home page styles*/
 
 .masthead {
