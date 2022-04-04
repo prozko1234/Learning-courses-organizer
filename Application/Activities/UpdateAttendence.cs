@@ -37,7 +37,7 @@ namespace Application.Activities
 
                 if (activity == null) return null;
 
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
                 if (user == null) return null;
 
