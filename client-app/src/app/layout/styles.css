@@ -46,4 +46,13 @@ body {
   font-weight: normal;
 }
 
+.chat-item {
+  cursor: pointer;
+  padding: 10px!important;
+}
+
+.chat-item:hover {
+  background-color: #8f8c8c!important;
+}
+
 /*end home page styles*/

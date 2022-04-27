@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Activities;
+using Application.Chats;
 using Application.Comments;
+using Application.Messages;
 using AutoMapper;
 using Domain;
 
@@ -16,6 +18,8 @@ namespace Application.Core
             string currentUsername = null;
 
             CreateMap<Activity, Activity>();
+            CreateMap<Chat, ChatDto>();
+            CreateMap<Message, MessageDto>();
             CreateMap<Activity, ActivityDto>()
                 .ForMember(d => d.HostUsername,
                  o => o.MapFrom(s => s.Attendees.FirstOrDefault(x => x.IsHost).User.UserName));
@@ -36,6 +40,12 @@ namespace Application.Core
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(x => x.IsMain).Url));
+            CreateMap<ActivityAttendee, Profiles.UserActivityDto>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Activity.Id))
+                .ForMember(d => d.Date, o => o.MapFrom(s => s.Activity.Date))
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.Activity.Title))
+                .ForMember(d => d.Category, o => o.MapFrom(s => s.Activity.Category))
+                .ForMember(d => d.HostUsername, o => o.MapFrom(s => s.Activity.Attendees.FirstOrDefault(x => x.IsHost).User.UserName));
         }
     }
 }

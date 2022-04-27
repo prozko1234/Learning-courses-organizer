@@ -11,10 +11,11 @@ export default observer(function NavBar() {
             <Container>
                 <Menu.Item as={NavLink} exact to='/' header>
                     <img src="/assets/logo.png" alt="" style={{ marginRight: '10px' }} />
-                    Reactivities
+                    UniverSocial
                 </Menu.Item>
                 <Menu.Item as={NavLink} to='/activities' name='activities' />
                 <Menu.Item as={NavLink} to='/errors' name='errors' />
+                <Menu.Item as={NavLink} to='/chats' name='chats' />
                 <Menu.Item as={NavLink} to='/createactivity'>
                     <Button as={Link} to='/createactivity' positive content='Create Activity' />
                 </Menu.Item>

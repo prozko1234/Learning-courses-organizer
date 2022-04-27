@@ -18,5 +18,6 @@ namespace Application.Activities
         public string HostUsername { get; set; }
         public bool IsCanceled { get; set; }
         public ICollection<AttendeeDto> Attendees { get; set; }
+        public ICollection<ActivityLike> Likes { get; set; }
     }
 }

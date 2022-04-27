@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,9 +20,12 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly TokenService _tokenService;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, TokenService tokenService)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, TokenService tokenService,
+        RoleManager<IdentityRole> roleManager)
         {
+            _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
@@ -68,9 +72,14 @@ namespace API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-
+            
             if (result.Succeeded)
             {
+                var role = _roleManager.FindByNameAsync("User").Result;
+                if (role != null)
+                {
+                    IdentityResult roleresult = await _userManager.AddToRoleAsync(user, role.Name);
+                }
                 return CreateUserObject(user);
             }
 
@@ -86,6 +95,30 @@ namespace API.Controllers
             return CreateUserObject(user);
         }
 
+        [AllowAnonymous]
+        [HttpGet("/api/account/userexist/{email}")]
+        public async Task<ActionResult<bool>> UserExist(string email)
+        {
+            var user = await _userManager.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Email == email);
+            
+            if(user != null)
+                return true;
+            else
+                return false;
+        }
+
+        [Authorize]
+        [HttpGet("{email}")]
+        public async Task<ActionResult<bool>> GetUserByEmail(string email)
+        {
+            var user = await _userManager.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user != null)
+                return true;
+            else
+                return false;
+        }
+
         private UserDto CreateUserObject(User user)
         {
             return new UserDto
@@ -93,7 +126,8 @@ namespace API.Controllers
                 DisplayName = user.DisplayName,
                 Image = user?.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
                 Token = _tokenService.CreateToken(user),
-                Username = user.UserName
+                Username = user.UserName,
+                Roles = (List<string>)_userManager.GetRolesAsync(user).Result
             };
         }
     }

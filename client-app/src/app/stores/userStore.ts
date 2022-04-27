@@ -62,4 +62,19 @@ export default class UserStore {
     setDisplayName = (name: string) => {
         if (this.user) this.user.displayName = name;
     }
+
+    loginFacebook = async (facebookUser: UserFormValues) => {
+        try {
+            const userExist = await agent.Account.userExist(facebookUser.email);
+            await runInAction(async () => {
+                if (!userExist) {
+                    await this.register(facebookUser);
+                } else {
+                    await this.login(facebookUser)
+                }
+            })
+        } catch (error) {
+            throw error;
+        }
+    }
 }

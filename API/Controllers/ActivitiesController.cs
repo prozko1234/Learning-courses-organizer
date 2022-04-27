@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Application.Activities;
+using Application.Core;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,14 @@ namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
+        [Authorize(Roles = "User, MainAdmin, Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetActivities()
+        public async Task<IActionResult> GetActivities([FromQuery]ActivityParams param)
         {
-            return HandleResult(await Mediator.Send(new List.Query()));
+            return HandlePagedResult(await Mediator.Send(new List.Query{Params = param}));
         }
 
+        [Authorize(Roles = "User, MainAdmin, Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
         {
@@ -45,6 +48,12 @@ namespace API.Controllers
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> Attend(Guid id){
             return HandleResult(await Mediator.Send(new UpdateAttendence.Command { Id = id }));
+        }
+
+        [HttpPost("{id}/like")]
+        public async Task<IActionResult> Like(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateLike.Command { ActivityId = id }));
         }
     }
 }

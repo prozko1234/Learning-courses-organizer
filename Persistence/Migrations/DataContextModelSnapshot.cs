@@ -66,6 +66,54 @@ namespace Persistence.Migrations
                     b.ToTable("ActivityAttendees");
                 });
 
+            modelBuilder.Entity("Domain.ActivityLike", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ActivityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ActivityLikes");
+                });
+
+            modelBuilder.Entity("Domain.Chat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastMessage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastMessageDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SecondUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SecondUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Chats");
+                });
+
             modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -91,6 +139,33 @@ namespace Persistence.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ChatId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MessageText")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -346,6 +421,36 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.ActivityLike", b =>
+                {
+                    b.HasOne("Domain.Activity", "Activity")
+                        .WithMany("Likes")
+                        .HasForeignKey("ActivityId");
+
+                    b.HasOne("Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Chat", b =>
+                {
+                    b.HasOne("Domain.User", "SecondUser")
+                        .WithMany()
+                        .HasForeignKey("SecondUserId");
+
+                    b.HasOne("Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("SecondUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.HasOne("Domain.Activity", "Activity")
@@ -360,6 +465,21 @@ namespace Persistence.Migrations
                     b.Navigation("Activity");
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Domain.Message", b =>
+                {
+                    b.HasOne("Domain.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Domain.Chat", "Chat")
+                        .WithMany()
+                        .HasForeignKey("ChatId");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -444,6 +564,8 @@ namespace Persistence.Migrations
                     b.Navigation("Attendees");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("Domain.User", b =>
