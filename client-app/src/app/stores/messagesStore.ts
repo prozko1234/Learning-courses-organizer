@@ -14,7 +14,7 @@ export default class MessagesStore {
     createHubConnection = (chatId: string) => {
         if (chatId) {
             this.hubConnection = new HubConnectionBuilder()
-                .withUrl('http://localhost:5000/messenger?chatId=' + chatId, {
+                .withUrl(process.env.REACT_APP_MESSENGER_URL + '?chatId=' + chatId, {
                     accessTokenFactory: () => store.userStore.user?.token!
                 })
                 .withAutomaticReconnect()

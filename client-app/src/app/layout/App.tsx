@@ -17,6 +17,7 @@ import LoadingComponent from './LoadingComponent';
 import ModalContainer from '../common/modals/ModalContainer';
 import ProfilePage from '../../features/profiles/ProfilePage';
 import ChatsList from '../../features/chats/ChatsList';
+import PrivateRoot from './PrivateRoot';
 
 function App() {
   const location = useLocation();
@@ -46,10 +47,10 @@ function App() {
               <Switch>
                 <Route exact path={'/activities'} component={ActivityDashboard} />
                 <Route path={'/activities/:id'} component={ActivityDetails} />
-                <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
-                <Route path={'/profiles/:username'} component={ProfilePage} />
-                <Route path={'/chats'} component={ChatsList} />
-                <Route path={'/errors'} component={TestErrors} />
+                <PrivateRoot key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
+                <PrivateRoot path={'/profiles/:username'} component={ProfilePage} />
+                <PrivateRoot path={'/chats'} component={ChatsList} />
+                <PrivateRoot path={'/errors'} component={TestErrors} />
                 <Route path={'/server-error'} component={ServerError} />
                 <Route path={'/login'} component={LoginForm} />
                 <Route component={NotFound} />

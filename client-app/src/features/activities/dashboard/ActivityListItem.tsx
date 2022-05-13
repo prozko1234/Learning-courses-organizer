@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Button, Icon, Item, Label, Segment } from 'semantic-ui-react';
 import { Activity } from '../../../app/models/activity';
 import ActivityListItemAttendee from './ActivityListItemAttendee';
+import { FacebookShareButton, TwitterShareButton } from "react-share";
+import { FacebookIcon, TwitterIcon } from "react-share";
 
 interface Props {
     activity: Activity
@@ -59,6 +61,23 @@ export default function ActivityListItem({ activity }: Props) {
                     floated='right'
                     content='View'
                 />
+                <FacebookShareButton
+                    style={{ float: "right" }}
+                    url={`${process.env.REACT_APP_URL }/activities/${activity.id}`}
+                    quote={`Aktywność ${activity.description} `}
+                    hashtag={"#activity"}
+                    className="Demo__some-network__share-button"
+                >
+                    <FacebookIcon size={32} round />
+                </FacebookShareButton>
+                <TwitterShareButton
+                    style={{float:"right"}}
+                    title={`Aktywność ${activity.description} `}
+                    url={`${process.env.REACT_APP_URL}/activities/${activity.id}`}
+                    hashtags={["hashtag1", "hashtag2"]}
+                >
+                    <TwitterIcon size={32} round />
+                </TwitterShareButton>
             </Segment>
         </Segment.Group>
     )

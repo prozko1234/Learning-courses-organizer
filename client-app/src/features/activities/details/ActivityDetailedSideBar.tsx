@@ -1,14 +1,21 @@
-import React from 'react'
-import { Segment, List, Label, Item, Image } from 'semantic-ui-react'
+import React, { useEffect } from 'react'
+import { Segment, List, Label, Item, Image, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity';
+import { useStore } from '../../../app/stores/store';
 
 interface Props {
     activity: Activity;
+    likesCount: number;
+    isLoggedIn: boolean
 }
 
-export default observer(function ActivityDetailedSidebar({ activity: { attendees, host } }: Props) {
+export default observer(function ActivityDetailedSidebar({ activity: { attendees, host, id }, likesCount, isLoggedIn }: Props) {
+    const { activityStore: { like, likes } } = useStore();
+    useEffect(() => {
+        
+    }, [like, likes])
     if (!attendees) return null;
     return (
         <>
@@ -22,6 +29,16 @@ export default observer(function ActivityDetailedSidebar({ activity: { attendees
             >
                 {attendees.length} {attendees.length === 1 ? 'Person' : 'People'}
             </Segment>
+            {isLoggedIn ?
+                <Segment attached>
+                    <Icon onClick={like} size='large' color='teal' name='like' /> {likesCount}
+                </Segment>
+                :
+                <Segment attached>
+                    <Icon size='large' color='teal' name='like' /> {likesCount}
+                </Segment>
+            }
+
             <Segment attached>
                 <List relaxed divided>
                     {attendees.map(attendee => (

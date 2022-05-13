@@ -15,6 +15,7 @@ export default class ActivityStore {
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
     predicate = new Map().set('all', true)
+    likes: number = 0
 
     constructor() {
         makeAutoObservable(this)
@@ -110,6 +111,7 @@ export default class ActivityStore {
         let activity = this.getActivity(id);
         if (activity) {
             this.selectedActivity = activity;
+            await this.getLikes(id);
             return activity;
         } else {
             this.setLoadingInitial(true)
@@ -213,7 +215,6 @@ export default class ActivityStore {
             })
         } catch (error) {
             console.log(error);
-
         } finally {
             runInAction(() => { this.loading = false })
         }
@@ -252,7 +253,35 @@ export default class ActivityStore {
         })
     }
 
-    like = (activityId: string) => {
-        
+    getLikes = async (id: string) => {
+        this.loading = true;
+        try {
+            var result = await agent.Activities.likes(id);
+            runInAction(() => {
+                this.likes = result;
+                this.loading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loading = false;
+            })
+        }   
+    }
+
+    like = async () => {
+        this.loading = true;
+        try {
+            runInAction(() => {
+                agent.Activities.like(this.selectedActivity!.id);
+                this.getLikes(this.selectedActivity!.id);
+                this.loading = false;
+            })
+        } catch(error) {
+            console.log(error);
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
     }
 }

@@ -24,10 +24,13 @@ export default observer(function HomePage() {
                     </>
                 ) : (
                     <>
+                        <Button as={Link} to='/activities' size='huge' inverted>
+                            Go to chat and do activities!
+                        </Button>
                         <Button onClick={() => modalStore.openModal(<LoginForm />)} to='/login' size='huge' inverted>
                             Log in!
                         </Button>
-                            <Button onClick={() => modalStore.openModal(<RegisterForm />)} to='/register' size='huge' inverted>
+                        <Button onClick={() => modalStore.openModal(<RegisterForm />)} to='/register' size='huge' inverted>
                             Register!
                         </Button>
                     </>
